@@ -9,9 +9,11 @@
 
 include_recipe "user"
 
+admin_gid = node['ow_users']['admin_gid']
+
 # Create an "admins" group on the system
 group "admins" do
-  gid     999
+  gid     admin_gid
 end
 
 users_databag_name = 'users'
@@ -26,7 +28,7 @@ users.each do |username|
   # This causes a round-trip to the server for each admin in the data bag
   user = data_bag_item(users_databag_name, username)
 
-  if user['gid'] == 999
+  if user['gid'] == admin_gid
     admins.push(username)
   end
 
