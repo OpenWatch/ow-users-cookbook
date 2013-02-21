@@ -9,6 +9,11 @@
 
 include_recipe "user"
 
+# Create an "admins" group on the system
+group "admins" do
+  gid     999
+end
+
 users_databag_name = 'users'
 passwords_databag_name = "user-passwords"
 passwords_item_name = "passwords"
@@ -35,10 +40,7 @@ users.each do |username|
   end
 end
 
-# Create an "admins" group on the system
-# You might use this group in the /etc/sudoers file
-# to provide sudo access to the admins
+# Add the admins
 group "admins" do
-  gid     999
   members admins
 end
