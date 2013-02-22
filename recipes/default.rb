@@ -7,20 +7,17 @@
 # Licensed under the AGPLv3
 #
 
-include_recipe "user"
+active_gids = node['ow_users']['active_gids']
 
-admin_gid = node['ow_users']['admin_gid']
+default_gid = node['ow_users']['default_gid']
 
-# Create an "admins" group on the system
-group "admins" do
-  gid     admin_gid
-end
-
-users_databag_name = 'users'
-passwords_databag_name = "user-passwords"
-passwords_item_name = "passwords"
+users_databag_name = node['ow_users']['users_databag_name']
+groups_databag_name = node['ow_users']['groups_databag_name']
+passwords_databag_name = node['ow_users']['passwords_databag_name']
+passwords_item_name = node['ow_users']['passwords_item_name']
 
 users = data_bag(users_databag_name)
+gids = data_bag(groups_databag_name)['gids']
 passwords = Chef::EncryptedDataBagItem.load(passwords_databag_name, passwords_item_name)
 admins = []
 
@@ -28,21 +25,22 @@ users.each do |username|
   # This causes a round-trip to the server for each admin in the data bag
   user = data_bag_item(users_databag_name, username)
 
-  if user['gid'] == admin_gid
-    admins.push(username)
+  # If the group is registered in our group data bag, create it
+  if gids.has_key?(user['gid'])
+    group gids.fetch(user['gid']) do
+      gid     user['gid']
+    end
   end
 
-  user_account username do
-    comment   user['comment']
-    ssh_keys  user['ssh_keys']
-    uid       user['uid']
-    gid       user['gid']
-    password  passwords[username]
-    home      home
-  end
-end
+  if active_gids.include? user['gid']
+    user_account username do
+      comment   (defined?(user['comment']) ? user['comment'] : "")
+      ssh_keys  (defined?(user['ssh_keys']) ? user['ssh_keys'] : "")
+      uid       user['uid']
+      gid       user['gid']
+      password  passwords[username]
+    end
 
-# Add the admins
-group "admins" do
-  members admins
+  end
+
 end
