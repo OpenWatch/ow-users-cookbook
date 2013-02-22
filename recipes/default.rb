@@ -13,11 +13,12 @@ default_gid = node['ow_users']['default_gid']
 
 users_databag_name = node['ow_users']['users_databag_name']
 groups_databag_name = node['ow_users']['groups_databag_name']
+groups_item_name = node['ow_users']['groups_databag_item_name']
 passwords_databag_name = node['ow_users']['passwords_databag_name']
-passwords_item_name = node['ow_users']['passwords_item_name']
+passwords_item_name = node['ow_users']['passwords_databag_item_name']
 
 users = data_bag(users_databag_name)
-gids = data_bag(groups_databag_name)['gids']
+gids = data_bag_item(groups_databag_name, "gids")
 passwords = Chef::EncryptedDataBagItem.load(passwords_databag_name, passwords_item_name)
 admins = []
 

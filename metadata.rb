@@ -13,3 +13,5 @@ attribute "ow_users/admins_gid",
   :display_name => "Admins GID",
   :description => "Group ID of the Admins Group",
   :default => "999"
+
+# See /attributes/default.rb 

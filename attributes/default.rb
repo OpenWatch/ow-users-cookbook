@@ -14,5 +14,6 @@ default['ow_users']['app_service_gid'] = 500
 
 default['ow_users']['users_databag_name'] = "users"
 default['ow_users']['groups_databag_name'] = "groups"
+default['ow_users']['groups_databag_item_name'] = "groups"
 default['ow_users']['passwords_databag_name'] = "user-passwords"
-default['ow_users']['passwords_item_name'] = "passwords"
+default['ow_users']['passwords_databag_item_name'] = "passwords"
