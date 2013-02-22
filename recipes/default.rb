@@ -18,7 +18,8 @@ passwords_databag_name = node['ow_users']['passwords_databag_name']
 passwords_item_name = node['ow_users']['passwords_databag_item_name']
 
 users = data_bag(users_databag_name)
-gids = data_bag_item(groups_databag_name, "gids")
+gids_item = data_bag_item(groups_databag_name, groups_item_name)
+gids = gids_item["gids"]
 passwords = Chef::EncryptedDataBagItem.load(passwords_databag_name, passwords_item_name)
 admins = []
 
